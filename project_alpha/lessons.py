@@ -11,3 +11,5 @@ class lesson():
     def set_classroom(self, classroom):
         self.assigned_classroom = classroom
     
+    def __str__(self):
+        return self.shortcut

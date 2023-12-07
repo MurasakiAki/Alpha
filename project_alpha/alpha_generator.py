@@ -1,12 +1,15 @@
 from lessons import lesson
 from classrooms import classroom
 from teachers import teacher
+import random
 
 monday = []
 tuesday = []
 wednesday = []
 thursday = []
 friday = []
+
+week = [monday, tuesday, wednesday, thursday, friday]
 
 teachers = [
     teacher("Mgr.", "Libuše", "Hrabalová", "Hr", 4, "M"),
@@ -54,7 +57,15 @@ subjects = [
     lesson("Tělesná výchova", "TV", False, False)
 ]
 
-schedule = {"monday" : monday, "tuesday" : tuesday, "wednesday" : wednesday, "thursday" : thursday, "friday" : friday}
-
 def generate_schedule():
-    pass
+    for day in week:
+        number_of_subjects = random.randrange(5, 10)
+        for i in range(number_of_subjects):
+            day.append(subjects[random.randrange(0, len(subjects) - 1)])
+
+generate_schedule()
+
+for day in week:
+    for subject in day:
+        print(subject, end=' ')
+    print("\n")

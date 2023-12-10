@@ -43,6 +43,8 @@ classrooms = [
     classroom("5", 1, False)
 ]
 
+free_lesson = lesson("Volná hodina/Oběd", "X", False, False)
+
 subjects = [
     lesson("Český jazyk", "C", False, False),
     lesson("Matematika", "M", False, False),
@@ -59,9 +61,30 @@ subjects = [
 
 def generate_schedule():
     for day in week:
-        number_of_subjects = random.randrange(5, 10)
+        number_of_subjects = random.randint(5, 10)
+        when_begin = random.randint(0, 1)
+        has_lunch = False
+        if number_of_subjects == 5:
+            has_lunch = True
+        print(number_of_subjects)
+
         for i in range(number_of_subjects):
-            day.append(subjects[random.randrange(0, len(subjects))])
+            if i == 0 and when_begin == 1:
+                day.append(free_lesson)
+                if number_of_subjects < 10:
+                    number_of_subjects += 1
+            else:
+                if i == 8:
+                    if not has_lunch:
+                        day.append(free_lesson)
+                        has_lunch = True
+                    '''
+                    elif i > 5 and random.randint(0, 1):
+                        day.append(free_lesson)
+                        has_lunch = True
+                    '''
+                else:
+                    day.append(subjects[random.randint(0, len(subjects) - 1)])
 
 generate_schedule()
 

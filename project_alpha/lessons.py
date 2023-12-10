@@ -13,3 +13,4 @@ class lesson():
     
     def __str__(self):
         return self.shortcut
+

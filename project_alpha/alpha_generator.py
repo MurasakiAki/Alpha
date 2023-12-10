@@ -61,11 +61,19 @@ def generate_schedule():
     for day in week:
         number_of_subjects = random.randrange(5, 10)
         for i in range(number_of_subjects):
-            day.append(subjects[random.randrange(0, len(subjects) - 1)])
+            day.append(subjects[random.randrange(0, len(subjects))])
+
+def rate_schedule():
+    score = 0
+
+    for day in week:
+        for subject in day:
+            pass
 
 generate_schedule()
 
-for day in week:
-    for subject in day:
+for i in range(len(week)):
+    print("Day", i + 1, end=": ")
+    for subject in week[i]:
         print(subject, end=' ')
     print("\n")

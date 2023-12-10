@@ -63,13 +63,6 @@ def generate_schedule():
         for i in range(number_of_subjects):
             day.append(subjects[random.randrange(0, len(subjects))])
 
-def rate_schedule():
-    score = 0
-
-    for day in week:
-        for subject in day:
-            pass
-
 generate_schedule()
 
 for i in range(len(week)):

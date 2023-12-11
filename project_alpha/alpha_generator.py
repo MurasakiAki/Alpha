@@ -71,20 +71,21 @@ def generate_schedule():
         for i in range(number_of_subjects):
             if i == 0 and when_begin == 1:
                 day.append(free_lesson)
-                if number_of_subjects < 10:
-                    number_of_subjects += 1
             else:
-                if i == 8:
+
+                if len(day) > 4 and random.randint(0, 1):
                     if not has_lunch:
                         day.append(free_lesson)
                         has_lunch = True
-                    '''
-                    elif i > 5 and random.randint(0, 1):
+                elif len(day) == 7:
+                    if not has_lunch:
                         day.append(free_lesson)
                         has_lunch = True
-                    '''
                 else:
                     day.append(subjects[random.randint(0, len(subjects) - 1)])
+
+        if day[len(day) - 1].shortcut == "X":
+            day.pop()
 
 generate_schedule()
 

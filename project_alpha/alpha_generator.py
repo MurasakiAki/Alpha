@@ -62,21 +62,21 @@ subjects = [
 def join_class(day):
     pass
 
-def rearrange_duplicates(lessons):
+def join_practical(day):
     seen_shortcuts = set()
-    result_lessons = []
+    result_day = []
 
-    for lesson in lessons:
-        if lesson.shortcut in seen_shortcuts:
+    for subject in day:
+        if subject.shortcut in seen_shortcuts:
             # If the shortcut is a duplicate, insert it next to the original occurrence
-            index = result_lessons.index(lesson)
-            result_lessons.insert(index + 1, lesson)
+            index = result_day.index(subject)
+            result_day.insert(index + 1, subject)
         else:
             # If the shortcut is not a duplicate, add it to the result list
-            seen_shortcuts.add(lesson.shortcut)
-            result_lessons.append(lesson)
+            seen_shortcuts.add(subject.shortcut)
+            result_day.append(subject)
 
-    return result_lessons
+    return result_day
 
 def generate_schedule():
     for day in week:
@@ -102,6 +102,8 @@ def generate_schedule():
 
         if day[len(day) - 1].shortcut == "X":
             day.pop()
+        
+        day = join_practical(day)
 
 generate_schedule()
 

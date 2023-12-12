@@ -59,6 +59,25 @@ subjects = [
     lesson("Tělesná výchova", "TV", False, False)
 ]
 
+def join_class(day):
+    pass
+
+def rearrange_duplicates(lessons):
+    seen_shortcuts = set()
+    result_lessons = []
+
+    for lesson in lessons:
+        if lesson.shortcut in seen_shortcuts:
+            # If the shortcut is a duplicate, insert it next to the original occurrence
+            index = result_lessons.index(lesson)
+            result_lessons.insert(index + 1, lesson)
+        else:
+            # If the shortcut is not a duplicate, add it to the result list
+            seen_shortcuts.add(lesson.shortcut)
+            result_lessons.append(lesson)
+
+    return result_lessons
+
 def generate_schedule():
     for day in week:
         number_of_subjects = random.randint(5, 10)
@@ -66,18 +85,15 @@ def generate_schedule():
         has_lunch = False
         if number_of_subjects == 5:
             has_lunch = True
-        print(number_of_subjects)
-
         for i in range(number_of_subjects):
             if i == 0 and when_begin == 1:
                 day.append(free_lesson)
             else:
-
-                if len(day) > 4 and random.randint(0, 1):
+                if len(day) == 7:
                     if not has_lunch:
                         day.append(free_lesson)
                         has_lunch = True
-                elif len(day) == 7:
+                if len(day) > 4 and random.randint(0, 1):
                     if not has_lunch:
                         day.append(free_lesson)
                         has_lunch = True

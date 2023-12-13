@@ -100,6 +100,9 @@ def add_classrooms(day):
         except:
             subject.set_classroom(get_random_theo_classroom(classrooms))
 
+def add_teachers(day):
+    pass
+
 def generate_schedule():
 
     monday = []

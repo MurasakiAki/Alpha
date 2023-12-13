@@ -59,15 +59,15 @@ subjects = [
     lesson("Tělesná výchova", "TV", False, False)
 ]
 
-def join_class(day):
-    pass
-
 def join_practical(day):
     seen_shortcuts = set()
     result_day = []
+    practical_subjects = []
 
     for subject in day:
-        if subject.shortcut in seen_shortcuts:
+        if subject.is_practical:
+            practical_subjects.append(subject)
+        elif subject.shortcut in seen_shortcuts:
             # If the shortcut is a duplicate, insert it next to the original occurrence
             index = result_day.index(subject)
             result_day.insert(index + 1, subject)
@@ -75,6 +75,9 @@ def join_practical(day):
             # If the shortcut is not a duplicate, add it to the result list
             seen_shortcuts.add(subject.shortcut)
             result_day.append(subject)
+
+    # Insert practical subjects at the end
+    result_day.extend(practical_subjects)
 
     return result_day
 

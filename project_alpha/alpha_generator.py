@@ -3,14 +3,6 @@ from classrooms import classroom
 from teachers import teacher
 import random
 
-monday = []
-tuesday = []
-wednesday = []
-thursday = []
-friday = []
-
-week = [monday, tuesday, wednesday, thursday, friday]
-
 teachers = [
     teacher("Mgr.", "Libuše", "Hrabalová", "Hr", 4, "M"),
     teacher("Ing.", "Antonín", "Vobecký", "Vc", 2, "DS", "PV"),
@@ -31,6 +23,8 @@ teachers = [
     teacher("Ing.", "Ondřej", "Mandík", "Ma", 1, "PV")
 ]
 
+gym = classroom("TV", 0, False)
+
 classrooms = [
     classroom("25", 4, False),
     classroom("19", 3, True),
@@ -38,7 +32,6 @@ classrooms = [
     classroom("29", 4, False),
     classroom("17", 3, True),
     classroom("26", 3, False),
-    classroom("TV", 0, False),
     classroom("18", 3, True),
     classroom("5", 1, False)
 ]
@@ -56,7 +49,7 @@ subjects = [
     lesson("Cvičení ze správy IT", "CIT", True, False),
     lesson("Anglický jazyk", "A", False, False),
     lesson("Technický projekt", "TP", False, False),
-    lesson("Tělesná výchova", "TV", False, False)
+    lesson("Tělesná výchova", "TV", True, False)
 ]
 
 def join_practical(day):
@@ -66,22 +59,57 @@ def join_practical(day):
 
     for subject in day:
         if subject.is_practical:
-            practical_subjects.append(subject)
+            if any(practical.shortcut == subject.shortcut for practical in practical_subjects):
+                index = practical_subjects.index(next(practical for practical in practical_subjects if practical.shortcut == subject.shortcut))
+                practical_subjects.insert(index + 1, subject)
+            else:
+                practical_subjects.append(subject)
         elif subject.shortcut in seen_shortcuts:
-            # If the shortcut is a duplicate, insert it next to the original occurrence
             index = result_day.index(subject)
             result_day.insert(index + 1, subject)
         else:
-            # If the shortcut is not a duplicate, add it to the result list
             seen_shortcuts.add(subject.shortcut)
             result_day.append(subject)
 
-    # Insert practical subjects at the end
     result_day.extend(practical_subjects)
 
     return result_day
 
+def get_random_lab_classroom(classrooms):
+    lab_classrooms = [classroom for classroom in classrooms if classroom.is_lab]
+    if lab_classrooms:
+        return random.choice(lab_classrooms)
+    else:
+        return None
+
+def get_random_theo_classroom(classrooms):
+    theo_classrooms = [classroom for classroom in classrooms if not classroom.is_lab]
+    if theo_classrooms:
+        return random.choice(theo_classrooms)
+    else:
+        return None
+
+def add_classrooms(day):
+    for subject in day:
+        index = day.index(subject)
+        try:
+            if subject.is_practical and subject.shortcut == day[index + 1].shortcut:
+                subject.set_classroom(get_random_lab_classroom(classrooms))
+            else:
+                subject.set_classroom(get_random_theo_classroom(classrooms))
+        except:
+            subject.set_classroom(get_random_theo_classroom(classrooms))
+
 def generate_schedule():
+
+    monday = []
+    tuesday = []
+    wednesday = []
+    thursday = []
+    friday = []
+
+    week = [monday, tuesday, wednesday, thursday, friday]
+
     for day in week:
         number_of_subjects = random.randint(5, 10)
         when_begin = random.randint(0, 1)
@@ -107,11 +135,7 @@ def generate_schedule():
             day.pop()
         
         day = join_practical(day)
+        add_classrooms(day)
+    
+    return week
 
-generate_schedule()
-
-for i in range(len(week)):
-    print("Day", i + 1, end=": ")
-    for subject in week[i]:
-        print(subject, end=' ')
-    print("\n")

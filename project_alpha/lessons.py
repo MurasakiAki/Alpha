@@ -1,5 +1,5 @@
 class lesson():
-    def __init__(self, name, shortcut, is_practical, need_theoretical):
+    def __init__(self, name, shortcut, is_practical, need_theoretical, is_profile):
         self.name = name
         self.shortcut = shortcut
         self.is_practical = is_practical

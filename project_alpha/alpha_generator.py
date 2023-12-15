@@ -39,17 +39,17 @@ classrooms = [
 free_lesson = lesson("Volná hodina/Oběd", "X", False, False)
 
 subjects = [
-    lesson("Český jazyk", "C", False, False),
-    lesson("Matematika", "M", False, False),
-    lesson("Aplikovaná matematika", "AM", False, False),
-    lesson("Počítačové systémy a sítě", "PSS", True, True),
-    lesson("Databázové systémy", "DS", True, True),
-    lesson("Webové aplikace", "WA", True, True),
-    lesson("Programové vybavení", "PV", True, True),
-    lesson("Cvičení ze správy IT", "CIT", True, False),
-    lesson("Anglický jazyk", "A", False, False),
-    lesson("Technický projekt", "TP", False, False),
-    lesson("Tělesná výchova", "TV", True, False)
+    lesson("Český jazyk", "C", False, False, True),
+    lesson("Matematika", "M", False, False, True),
+    lesson("Aplikovaná matematika", "AM", False, False, False),
+    lesson("Počítačové systémy a sítě", "PSS", True, True, False),
+    lesson("Databázové systémy", "DS", True, True, False),
+    lesson("Webové aplikace", "WA", True, True, False),
+    lesson("Programové vybavení", "PV", True, True, False),
+    lesson("Cvičení ze správy IT", "CIT", True, False, False),
+    lesson("Anglický jazyk", "A", False, False, True),
+    lesson("Technický projekt", "TP", False, False, False),
+    lesson("Tělesná výchova", "TV", True, False, False)
 ]
 
 def join_practical(day):

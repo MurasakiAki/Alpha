@@ -4,6 +4,7 @@ class lesson():
         self.shortcut = shortcut
         self.is_practical = is_practical
         self.need_theoretical = need_theoretical
+        self.is_profile = is_profile
 
     def set_teacher(self, teacher):
         self.assigned_teacher = teacher

@@ -36,7 +36,7 @@ classrooms = [
     classroom("5", 1, False)
 ]
 
-free_lesson = lesson("Volná hodina/Oběd", "X", False, False)
+free_lesson = lesson("Volná hodina/Oběd", "X", False, False, False)
 
 subjects = [
     lesson("Český jazyk", "C", False, False, True),
@@ -132,13 +132,19 @@ def generate_schedule():
                         day.append(free_lesson)
                         has_lunch = True
                 else:
-                    day.append(subjects[random.randint(0, len(subjects) - 1)])
+                    if len(day) == 0:
+                        sub_to_append = subjects[random.randint(0, len(subjects) - 1)]
+                        while sub_to_append.is_profile:
+                            sub_to_append = subjects[random.randint(0, len(subjects) - 1)]
+                        day.append(sub_to_append)
+                    else:
+                        day.append(subjects[random.randint(0, len(subjects) - 1)])
 
         if day[len(day) - 1].shortcut == "X":
             day.pop()
         
         day = join_practical(day)
         add_classrooms(day)
+        add_teachers(day)
     
     return week
-

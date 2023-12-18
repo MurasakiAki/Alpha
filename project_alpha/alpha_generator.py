@@ -7,7 +7,7 @@ teachers = [
     teacher("Mgr.", "Libuše", "Hrabalová", "Hr", 4, "M"),
     teacher("Ing.", "Antonín", "Vobecký", "Vc", 2, "DS", "PV"),
     teacher("", "Jan", "Molič", "Mo", 2, "PSS", "WA"),
-    teacher("Ing.", "Lukáš", "Masopust", "Ms", 2, "PSS", "WA", "IT"),
+    teacher("Ing.", "Lukáš", "Masopust", "Ms", 2, "PSS", "WA", "IT", "TP"),
     teacher("Ing.", "Tomáš", "Juchelka", "Ju", 1, "A"),
     teacher("Mgr.", "Pavel", "Lopocha", "Lc", 0, "TV"),
     teacher("Ing.", "Lucie", "Brčáková", "Bc", 1, "PIS", "EK", "ZSV"),
@@ -20,7 +20,8 @@ teachers = [
     teacher("Ing.", "Filip", "Kallmünzer", "Kl", 2, "F", "M", "AM"),
     teacher("Mgr.", "Simona", "Hemžalová", "Hs", 1, "IT", "A", "WA"),
     teacher("Ing. Bc.", "Šárka", "Paltíková", "Pa", 2, "A"),
-    teacher("Ing.", "Ondřej", "Mandík", "Ma", 1, "PV")
+    teacher("Ing.", "Ondřej", "Mandík", "Ma", 1, "PV"),
+    teacher("", "", "", "", 0, "X")
 ]
 
 gym = classroom("TV", 0, False)
@@ -105,7 +106,7 @@ def add_teachers(day):
         suitable_teachers = []
 
         for teacher in teachers:
-            if subject.shortcut != "X" and subject.shortcut in teacher.professions:
+            if subject.shortcut in teacher.professions:
                 suitable_teachers.append(teacher)
 
         if suitable_teachers:

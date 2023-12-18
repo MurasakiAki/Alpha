@@ -99,9 +99,24 @@ def add_classrooms(day):
                 subject.set_classroom(get_random_theo_classroom(classrooms))
         except:
             subject.set_classroom(get_random_theo_classroom(classrooms))
-
+            
 def add_teachers(day):
-    pass
+    for index, subject in enumerate(day):
+        suitable_teachers = []
+
+        for teacher in teachers:
+            if subject.shortcut != "X" and subject.shortcut in teacher.professions:
+                suitable_teachers.append(teacher)
+
+        if suitable_teachers:
+            assigned_teacher = random.choice(suitable_teachers)
+            subject.set_teacher(assigned_teacher)
+
+            try:
+                if subject.is_practical and subject.shortcut == day[index + 1].shortcut:
+                    day[index + 1].set_teacher(assigned_teacher)
+            except IndexError:
+                pass
 
 def generate_schedule():
 

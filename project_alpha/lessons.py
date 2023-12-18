@@ -9,9 +9,15 @@ class lesson():
     def set_teacher(self, teacher):
         self.assigned_teacher = teacher
     
+    def get_teacher(self):
+        return self.assigned_teacher
+
     def set_classroom(self, classroom):
         self.assigned_classroom = classroom
     
+    def get_classroom(self):
+        return self.assigned_classroom
+
     def __str__(self):
         return self.shortcut
 

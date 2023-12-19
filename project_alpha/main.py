@@ -1,5 +1,7 @@
 from alpha_generator import generate_schedule
 from alpha_checker import grade_week
+import math
+import time
 
 '''
 week = generate_schedule()
@@ -20,9 +22,12 @@ for i in range(len(week)):
 print(grade_week(week))
 '''
 
+
 best_week = []
 
-for i in range(1000):
+start_time = time.time()
+
+for i in range(math.factorial(5)):
     week = generate_schedule()
     week_score = grade_week(week)
     if i == 0:
@@ -33,6 +38,8 @@ for i in range(1000):
             best_week[0] = week
             best_week[1] = week_score
 
+end_time = time.time()
+
 for i in range(len(best_week[0])):
     print("Day", i + 1, end=": ")
     for subject in best_week[0][i]:
@@ -40,3 +47,5 @@ for i in range(len(best_week[0])):
     print("\n")
 
 print(best_week[1])
+print("\n")
+print(end_time - start_time)

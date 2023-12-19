@@ -160,6 +160,7 @@ def generate_schedule():
             day.pop()
         
         day = join_practical(day)
+        
         add_classrooms(day)
         add_teachers(day)
     

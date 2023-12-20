@@ -116,9 +116,8 @@ def add_teachers(day):
             try:
                 if subject.is_practical and subject.shortcut == day[index + 1].shortcut:
                     day[index + 1].set_teacher(assigned_teacher)
-            except IndexError:
+            except:
                 pass
-
 def generate_schedule():
 
     monday = []

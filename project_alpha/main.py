@@ -2,6 +2,7 @@ from alpha_generator import generate_schedule
 from alpha_checker import grade_week
 import math
 import time
+import multiprocessing
 
 '''
 week = generate_schedule()
@@ -27,7 +28,7 @@ best_week = []
 
 start_time = time.time()
 
-for i in range(math.factorial(5)):
+for i in range(100000):
     week = generate_schedule()
     week_score = grade_week(week)
     if i == 0:
@@ -38,6 +39,8 @@ for i in range(math.factorial(5)):
             best_week[0] = week
             best_week[1] = week_score
 
+    print(i)
+    
 end_time = time.time()
 
 for i in range(len(best_week[0])):

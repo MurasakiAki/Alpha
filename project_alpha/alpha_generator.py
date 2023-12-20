@@ -53,6 +53,35 @@ subjects = [
     lesson("Tělesná výchova", "TV", False, False, False)
 ]
 
+def generate_schedule():
+    week = []
+
+    for _ in range(5):
+        number_of_subjects = random.randint(5, 10)
+        when_begin = random.randint(0, 1)
+        has_lunch = number_of_subjects == 5
+
+        day = []
+        for i in range(number_of_subjects):
+            if i == 0 and when_begin == 1 or (len(day) > 4 and random.randint(0, 1)):
+                day.append(free_lesson)
+                has_lunch = True
+            else:
+                sub_to_append = subjects[random.randint(0, len(subjects) - 1)]
+                while sub_to_append.is_profile and len(day) == 0:
+                    sub_to_append = subjects[random.randint(0, len(subjects) - 1)]
+                day.append(sub_to_append)
+
+        if day and day[-1].shortcut == "X":
+            day.pop()
+
+        day = join_practical(day)
+        add_classrooms(day)
+        add_teachers(day)
+        week.append(day)
+
+    return week
+
 def join_practical(day):
     seen_shortcuts = set()
     result_day = []
@@ -60,7 +89,6 @@ def join_practical(day):
     for subject in day:
         if subject.is_practical:
             if subject.shortcut in seen_shortcuts:
-                # Find the index of the last occurrence of the practical subject
                 index = max(i for i, subj in enumerate(result_day) if subj.shortcut == subject.shortcut)
                 result_day.insert(index + 1, subject)
             else:
@@ -71,92 +99,31 @@ def join_practical(day):
 
     return result_day
 
-
 def get_random_lab_classroom(classrooms):
     lab_classrooms = [classroom for classroom in classrooms if classroom.is_lab]
-    if lab_classrooms:
-        return random.choice(lab_classrooms)
-    else:
-        return None
+    return random.choice(lab_classrooms) if lab_classrooms else None
 
 def get_random_theo_classroom(classrooms):
     theo_classrooms = [classroom for classroom in classrooms if not classroom.is_lab]
-    if theo_classrooms:
-        return random.choice(theo_classrooms)
-    else:
-        return None
+    return random.choice(theo_classrooms) if theo_classrooms else None
 
 def add_classrooms(day):
+    lab_classroom = get_random_lab_classroom(classrooms)
+    theo_classroom = get_random_theo_classroom(classrooms)
+
     for subject in day:
-        index = day.index(subject)
-        try:
-            if subject.is_practical and subject.shortcut == day[index + 1].shortcut:
-                subject.set_classroom(get_random_lab_classroom(classrooms))
-            else:
-                subject.set_classroom(get_random_theo_classroom(classrooms))
-        except:
-            subject.set_classroom(get_random_theo_classroom(classrooms))
-            
+        subject.set_classroom(lab_classroom) if subject.is_practical else subject.set_classroom(theo_classroom)
+
 def add_teachers(day):
-    for index, subject in enumerate(day):
-        suitable_teachers = []
-
-        for teacher in teachers:
-            if subject.shortcut in teacher.professions:
-                suitable_teachers.append(teacher)
-
+    for subject in day:
+        suitable_teachers = [t for t in teachers if subject.shortcut in t.professions]
         if suitable_teachers:
             assigned_teacher = random.choice(suitable_teachers)
             subject.set_teacher(assigned_teacher)
 
-            try:
-                if subject.is_practical and subject.shortcut == day[index + 1].shortcut:
-                    day[index + 1].set_teacher(assigned_teacher)
-            except:
-                pass
-def generate_schedule():
-
-    monday = []
-    tuesday = []
-    wednesday = []
-    thursday = []
-    friday = []
-
-    week = [monday, tuesday, wednesday, thursday, friday]
-
-    for day in week:
-        number_of_subjects = random.randint(5, 10)
-        when_begin = random.randint(0, 1)
-        has_lunch = False
-        if number_of_subjects == 5:
-            has_lunch = True
-        for i in range(number_of_subjects):
-            if i == 0 and when_begin == 1:
-                day.append(free_lesson)
-            else:
-                if len(day) == 7:
-                    if not has_lunch:
-                        day.append(free_lesson)
-                        has_lunch = True
-                if len(day) > 4 and random.randint(0, 1):
-                    if not has_lunch:
-                        day.append(free_lesson)
-                        has_lunch = True
-                else:
-                    if len(day) == 0:
-                        sub_to_append = subjects[random.randint(0, len(subjects) - 1)]
-                        while sub_to_append.is_profile:
-                            sub_to_append = subjects[random.randint(0, len(subjects) - 1)]
-                        day.append(sub_to_append)
-                    else:
-                        day.append(subjects[random.randint(0, len(subjects) - 1)])
-
-        if day[len(day) - 1].shortcut == "X":
-            day.pop()
-        
-        day = join_practical(day)
-        
-        add_classrooms(day)
-        add_teachers(day)
-    
-    return week
+def print_schedule(week):
+    for i, day in enumerate(week, start=1):
+        print("Day", i, end=": ")
+        for subject in day:
+            print(subject, end=' ')
+        print()

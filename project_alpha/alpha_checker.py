@@ -1,15 +1,13 @@
 def grade_day(day, seen_prac_subjects):
     daily_score = 0
-    seen_theo_subjects = []
+    seen_theo_subjects = set()
     how_many_tv = 0
     how_many_free = 0
-    how_many_cit = 0
 
     for index, subject in enumerate(day):
         if subject.shortcut != "X":
-
             if subject.shortcut == "CIT":
-                how_many_cit += 1
+                how_many_tv += 1
 
             # Check if the classroom floor matches the teacher's cabinet floor
             daily_score += 20 if subject.get_classroom().classroom_floor == subject.get_teacher().cabinet_floor else -20
@@ -17,7 +15,7 @@ def grade_day(day, seen_prac_subjects):
             if subject.is_practical:
                 # Check for duplicate practical subjects
                 if subject.shortcut not in seen_prac_subjects:
-                    seen_prac_subjects.append(subject.shortcut)
+                    seen_prac_subjects.add(subject.shortcut)
                 else:
                     daily_score -= 10  # Deduct score for duplicate practical subjects
 
@@ -26,7 +24,7 @@ def grade_day(day, seen_prac_subjects):
                     daily_score -= 20  # Deduct score for missing theoretical lesson in a practical pair
 
                 # Check for more than two practical lessons of the same subject
-                if seen_prac_subjects.count(subject.shortcut) > 2:
+                if len([s for s in seen_prac_subjects if s == subject.shortcut]) > 2:
                     daily_score -= 30  # Deduct score for more than two practical lessons of the same subject
 
                 # Check for one practical theoretical lesson before the two practical ones
@@ -35,7 +33,7 @@ def grade_day(day, seen_prac_subjects):
             else:
                 # Check for duplicate non-practical subjects
                 if subject.shortcut not in seen_theo_subjects:
-                    seen_theo_subjects.append(subject.shortcut)
+                    seen_theo_subjects.add(subject.shortcut)
                 else:
                     daily_score -= 50  # Deduct more score for duplicate non-practical subjects
         else:
@@ -48,7 +46,7 @@ def grade_day(day, seen_prac_subjects):
                 daily_score -= 15
 
     # Penalty for having the same theoretical subjects in one day
-    daily_score -= 5 * (len(seen_theo_subjects) - len(set(seen_theo_subjects)))
+    daily_score -= 5 * (len(seen_theo_subjects) - len(seen_theo_subjects))
 
     # Bonus for having two practical lessons of the same subject next to each other
     for index in range(1, len(day)):
@@ -61,24 +59,25 @@ def grade_day(day, seen_prac_subjects):
     else:
         daily_score -= 5
 
-    return [daily_score, seen_prac_subjects, how_many_tv, how_many_cit]
+    return [daily_score, how_many_tv]
 
 
 def grade_week(week):
     final_week_score = 0
-    seen_prac_sub_in_week = []
+    seen_prac_sub_in_week = set()
     final_tv_count = 0
-    final_cit_count = 0
 
     for day in week:
         graded_day = grade_day(day, seen_prac_sub_in_week)
         final_week_score += graded_day[0]
-        seen_prac_sub_in_week.extend(graded_day[1])
-        final_tv_count += graded_day[2]
-        final_cit_count += graded_day[3]
+        
+        # Ensure that graded_day[1] is a list before updating the set
+        if isinstance(graded_day[1], list):
+            seen_prac_sub_in_week.update(graded_day[1])
+            
+        final_tv_count += graded_day[1]
 
     # Bonus for meeting the TV count requirement
     final_week_score += 20 if final_tv_count == 2 else -30
-    final_week_score += 20 if final_cit_count == 2 else -30
 
     return final_week_score

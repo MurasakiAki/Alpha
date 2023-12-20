@@ -23,7 +23,6 @@ for i in range(len(week)):
 print(grade_week(week))
 '''
 
-
 best_week = []
 
 start_time = time.time()

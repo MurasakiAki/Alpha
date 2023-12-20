@@ -50,31 +50,27 @@ subjects = [
     lesson("Cvičení ze správy IT", "CIT", True, False, False),
     lesson("Anglický jazyk", "A", False, False, True),
     lesson("Technický projekt", "TP", False, False, False),
-    lesson("Tělesná výchova", "TV", True, False, False)
+    lesson("Tělesná výchova", "TV", False, False, False)
 ]
 
 def join_practical(day):
     seen_shortcuts = set()
     result_day = []
-    practical_subjects = []
 
     for subject in day:
         if subject.is_practical:
-            if any(practical.shortcut == subject.shortcut for practical in practical_subjects):
-                index = practical_subjects.index(next(practical for practical in practical_subjects if practical.shortcut == subject.shortcut))
-                practical_subjects.insert(index + 1, subject)
+            if subject.shortcut in seen_shortcuts:
+                # Find the index of the last occurrence of the practical subject
+                index = max(i for i, subj in enumerate(result_day) if subj.shortcut == subject.shortcut)
+                result_day.insert(index + 1, subject)
             else:
-                practical_subjects.append(subject)
-        elif subject.shortcut in seen_shortcuts:
-            index = result_day.index(subject)
-            result_day.insert(index + 1, subject)
+                result_day.append(subject)
         else:
             seen_shortcuts.add(subject.shortcut)
             result_day.append(subject)
 
-    result_day.extend(practical_subjects)
-
     return result_day
+
 
 def get_random_lab_classroom(classrooms):
     lab_classrooms = [classroom for classroom in classrooms if classroom.is_lab]

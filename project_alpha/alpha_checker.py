@@ -46,12 +46,12 @@ def grade_day(day, seen_prac_subjects):
                 daily_score -= 15
 
     # Penalty for having the same theoretical subjects in one day
-    daily_score -= 5 * (len(seen_theo_subjects) - len(seen_theo_subjects))
+    daily_score -= 25 * (len(seen_theo_subjects) - len(seen_theo_subjects))
 
     # Bonus for having two practical lessons of the same subject next to each other
     for index in range(1, len(day)):
         if day[index - 1].is_practical and day[index].is_practical and day[index - 1].shortcut == day[index].shortcut:
-            daily_score += 15
+            daily_score += 30
 
     # Bonus based on the number of lessons in the day
     if len(day) <= 7:

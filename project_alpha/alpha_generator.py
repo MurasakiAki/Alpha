@@ -54,32 +54,50 @@ subjects = [
 ]
 
 def generate_schedule():
-    week = []
 
-    for _ in range(5):
+    monday = []
+    tuesday = []
+    wednesday = []
+    thursday = []
+    friday = []
+
+    week = [monday, tuesday, wednesday, thursday, friday]
+
+    for day in week:
         number_of_subjects = random.randint(5, 10)
         when_begin = random.randint(0, 1)
-        has_lunch = number_of_subjects == 5
-
-        day = []
+        has_lunch = False
+        if number_of_subjects == 5:
+            has_lunch = True
         for i in range(number_of_subjects):
-            if i == 0 and when_begin == 1 or (len(day) > 4 and random.randint(0, 1)):
+            if i == 0 and when_begin == 1:
                 day.append(free_lesson)
-                has_lunch = True
             else:
-                sub_to_append = subjects[random.randint(0, len(subjects) - 1)]
-                while sub_to_append.is_profile and len(day) == 0:
-                    sub_to_append = subjects[random.randint(0, len(subjects) - 1)]
-                day.append(sub_to_append)
+                if len(day) == 7:
+                    if not has_lunch:
+                        day.append(free_lesson)
+                        has_lunch = True
+                if len(day) > 4 and random.randint(0, 1):
+                    if not has_lunch:
+                        day.append(free_lesson)
+                        has_lunch = True
+                else:
+                    if len(day) == 0:
+                        sub_to_append = subjects[random.randint(0, len(subjects) - 1)]
+                        while sub_to_append.is_profile:
+                            sub_to_append = subjects[random.randint(0, len(subjects) - 1)]
+                        day.append(sub_to_append)
+                    else:
+                        day.append(subjects[random.randint(0, len(subjects) - 1)])
 
-        if day and day[-1].shortcut == "X":
+        if day[len(day) - 1].shortcut == "X":
             day.pop()
-
+        
         day = join_practical(day)
+        
         add_classrooms(day)
         add_teachers(day)
-        week.append(day)
-
+    
     return week
 
 def join_practical(day):
@@ -89,6 +107,7 @@ def join_practical(day):
     for subject in day:
         if subject.is_practical:
             if subject.shortcut in seen_shortcuts:
+                # Find the index of the last occurrence of the practical subject
                 index = max(i for i, subj in enumerate(result_day) if subj.shortcut == subject.shortcut)
                 result_day.insert(index + 1, subject)
             else:

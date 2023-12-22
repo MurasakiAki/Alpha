@@ -3,12 +3,13 @@ from alpha_checker import grade_week
 import math
 import time
 import multiprocessing
+import configparser
 
 def gen_and_grade(lock, event, best_week, total_schedules, process_schedules):
     start_time = time.time()
     while not event.is_set():
         week = generate_schedule()
-        total_schedules.value += 1  # Increment the total_schedules counter
+        total_schedules.value += 1
         week_score = grade_week(week)
 
         with lock:
@@ -17,16 +18,16 @@ def gen_and_grade(lock, event, best_week, total_schedules, process_schedules):
 
         elapsed_time = time.time() - start_time
         if elapsed_time > MAX_RUNNING_TIME:
-            break  # Stop generating schedules if elapsed time exceeds the limit
+            break
 
     with lock:
-        process_schedules.append(total_schedules.value)  # Store the total schedules for this process
+        process_schedules.append(total_schedules.value)
 
-def main(number_of_processes):
+def main(number_of_processes, max_running_time):
     lock = multiprocessing.Lock()
     stop_event = multiprocessing.Event()
     best_week = multiprocessing.Manager().list()
-    total_schedules = multiprocessing.Value('i', 0)  # 'i' for integer type
+    total_schedules = multiprocessing.Value('i', 0)
     process_schedules = multiprocessing.Manager().list()
 
     processes = []
@@ -37,14 +38,18 @@ def main(number_of_processes):
         print("Starting process", i)
         process.start()
 
+    for t in range(max_running_time):
+        print(f"Waiting {max_running_time - t} seconds...", end="\r")
+        time.sleep(1)
+
     try:
         for process in processes:
-            process.join(MAX_RUNNING_TIME)
+            process.join(max_running_time)
     except KeyboardInterrupt:
         print("Stopping processes...")
         stop_event.set()
 
-    # Use terminate() to forcefully terminate the processes after the specified time
+
     for process in processes:
         process.terminate()
         process.join()
@@ -63,9 +68,13 @@ def main(number_of_processes):
     for num in process_schedules:
         total_number_of_schedules += num
 
-    print("Total number of schedules from each process:", process_schedules)
     print("Total number of generated schedules:", total_number_of_schedules)
 
 if __name__ == "__main__":
-    MAX_RUNNING_TIME = 60  # Set the maximum running time in seconds
-    main(128)
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+
+    MAX_RUNNING_TIME = int(config.get('Settings', 'MAX_RUNNING_TIME'))
+    number_of_processes = int(config.get('Settings', 'number_of_processes'))
+
+    main(number_of_processes, MAX_RUNNING_TIME)

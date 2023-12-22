@@ -107,7 +107,6 @@ def join_practical(day):
     for subject in day:
         if subject.is_practical:
             if subject.shortcut in seen_shortcuts:
-                # Find the index of the last occurrence of the practical subject
                 index = max(i for i, subj in enumerate(result_day) if subj.shortcut == subject.shortcut)
                 result_day.insert(index + 1, subject)
             else:
